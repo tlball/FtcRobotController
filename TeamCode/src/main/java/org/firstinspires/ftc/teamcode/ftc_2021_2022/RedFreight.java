@@ -27,11 +27,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.ftc_2021_2022;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -57,9 +56,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name = "Red Freight Duck Wheel", group = "Autonomous")
+@Autonomous(name = "Red Freight", group = "Autonomous")
 //@Disabled
-public class RedFreightDucks extends LinearOpMode {
+public class RedFreight extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -67,9 +66,10 @@ public class RedFreightDucks extends LinearOpMode {
     private DcMotor leftBottom;
     private DcMotor rightTop;
     private DcMotor rightBottom;
-    private CRServo duckWheel1;
+    //private DcMotor duckWheel;
     private DcMotor arm;
     private Servo claw;
+    //private CRServo duckWheel;
 
 
     public void setup() {
@@ -78,9 +78,10 @@ public class RedFreightDucks extends LinearOpMode {
         leftBottom = hardwareMap.get(DcMotor.class, "leftBottom");
         rightTop = hardwareMap.get(DcMotor.class, "rightTop");
         rightBottom = hardwareMap.get(DcMotor.class, "rightBottom");
+        //duckWheel = hardwareMap.get(DcMotor.class, "duckWheel");
         arm = hardwareMap.get(DcMotor.class, "arm");
         claw = hardwareMap.get(Servo.class, "claw");
-        duckWheel1 = hardwareMap.get(CRServo.class, "duckWheel1");
+        //duckWheel = hardwareMap.get(CRServo.class, "duckWheel");
 
         leftTop.setDirection(DcMotor.Direction.REVERSE);
         leftBottom.setDirection(DcMotor.Direction.REVERSE);
@@ -109,81 +110,62 @@ public class RedFreightDucks extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        // Make sure good grip on block
+        // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
+
+        // Step 1:  Drive forward for 3 seconds
+
         claw.setPosition(1.0);
         sleep(1000);
 
         //ducks(1);
 
-        // Raise arm to top level
         raiseArm(150);
 
-        // Drive to alliance hub
+//        leftTop.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        leftBottom.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        rightTop.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        rightBottom.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         int drivePosition = 860;
+
         driveToPosition(drivePosition);
+
         sleep(500);
 
-        // Release cube
         claw.setPosition(0);
         sleep(500);
 
-        // Raise arm to not get stuck
         raiseArm(50);
-
-        // Backup before driving away
         driveToPosition(-125);
 
-        // Drive to wall by storage
         strafeToPosition(1650);
-        sleep(500);
 
-
-        driveToPosition(-300);
-//        sleep(5000);
-
-        double duckSpeed = 1;
-        ducks(duckSpeed);
-//        sleep(5000);
-
-        driveToPosition(300);
-
+        driveToPosition(100);
     }
 
     private void driveToPosition(int drivePosition) {
         int distance = leftBottom.getCurrentPosition() + drivePosition;
-        telemetry.addData("distance", drivePosition);
-        telemetry.addData("leftBottom Current position", leftBottom.getCurrentPosition());
-        telemetry.addData("leftBottom New position", distance);
         leftBottom.setTargetPosition(distance);
         leftTop.setTargetPosition(distance);
         rightBottom.setTargetPosition(distance);
         rightTop.setTargetPosition(distance);
-        telemetry.update();
-
-        sleep(2000);
-
 
         leftBottom.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftTop.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBottom.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightTop.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        telemetry.update();
         drive(0.5, 0.5);
 
         while (leftBottom.isBusy()) {
-            telemetry.addData("leftBottom Actual position", leftBottom.getCurrentPosition());
-            telemetry.update();
-
             // do nothing
 //            telemetry.addData("Arm position", arm.getCurrentPosition());    //
 //            telemetry.update();
 
         }
-        sleep(2000);
 
         // 6. Turn off the motor
-        drive(0, 0);
+        //drive(0, 0);
     }
 
     private void strafeToPosition(int strafePosition) {
@@ -204,21 +186,21 @@ public class RedFreightDucks extends LinearOpMode {
         }
 
         // 6. Turn off the motor
-        drive(0, 0);
+        //drive(0, 0);
     }
 
     private void left(double power) {
         try {
-            leftBottom.setPower(power);
             leftTop.setPower(power);
+            leftBottom.setPower(power);
         } catch (Exception ex) {
         }
     }
 
     private void right(double power) {
         try {
-            rightBottom.setPower(power);
             rightTop.setPower(power);
+            rightBottom.setPower(power);
         } catch (Exception ex) {
         }
     }
@@ -231,7 +213,7 @@ public class RedFreightDucks extends LinearOpMode {
 
     private void raiseArm(int position) {
 //        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //       arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+ //       arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         telemetry.addData("Distance", position);    //
         telemetry.addData("Starting Arm position", arm.getCurrentPosition());    //
@@ -256,9 +238,9 @@ public class RedFreightDucks extends LinearOpMode {
         sleep(1000);
     }
 
-    private void ducks(double duckSpeed) {
-        duckWheel1.setPower(duckSpeed);
-    }
+    /*private void ducks(int duckSpeed) {
+        duckWheel.setPower(duckSpeed);
+    }*/
 
     /*leftTop.setPower(0.4);
     leftBottom.setPower(0.4);
@@ -279,13 +261,13 @@ public class RedFreightDucks extends LinearOpMode {
 
     // Step 2:  Stop
     strafeRight(0); //Stops motors
-*/
 
-    /*telemetry.addData("Path", "Complete");
+
+    telemetry.addData("Path", "Complete");
     telemetry.update();
-    sleep(1000);*/
-
-/*
+    sleep(1000);
+}
+*/
     public void moveLeft(double speed) {
         telemetry.addData("moveLeft speed", speed);
 
@@ -312,5 +294,5 @@ public class RedFreightDucks extends LinearOpMode {
     public void moveRight(double speed) {
         telemetry.addData("moveRight speed", speed);
         moveLeft(-speed);
-    }*/
+    }
 }

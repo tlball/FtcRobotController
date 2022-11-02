@@ -27,12 +27,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.ftc_2021_2022.oldcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -56,9 +56,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="BlueWarehouseFoward", group="Autonomous")
-//@Disabled
-public class BlueWarehouseForward extends LinearOpMode {
+@Autonomous(name="BlueStorage", group="Autonomous")
+@Disabled
+public class BlueStorageParkingAutonomous extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -66,8 +66,7 @@ public class BlueWarehouseForward extends LinearOpMode {
     private DcMotor leftBottom;
     private DcMotor rightTop;
     private DcMotor rightBottom;
-    private DcMotor arm;
-    private Servo claw;
+
 
     public void setup() {
 
@@ -75,19 +74,11 @@ public class BlueWarehouseForward extends LinearOpMode {
         leftBottom = hardwareMap.get(DcMotor.class, "leftBottom");
         rightTop = hardwareMap.get(DcMotor.class, "rightTop");
         rightBottom = hardwareMap.get(DcMotor.class, "rightBottom");
-        arm = hardwareMap.get(DcMotor.class, "arm");
-        claw = hardwareMap.get(Servo.class, "claw");
 
         leftTop.setDirection(DcMotor.Direction.REVERSE);
         leftBottom.setDirection(DcMotor.Direction.REVERSE);
         rightTop.setDirection(DcMotor.Direction.FORWARD);
         rightBottom.setDirection(DcMotor.Direction.FORWARD);
-
-        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftTop.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftBottom.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightTop.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightBottom.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Initiated");    //
@@ -103,24 +94,15 @@ public class BlueWarehouseForward extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        claw.setPosition(1.0);
-        sleep(1000);
-
         // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
 
-        raiseArm(150);
-
-        strafeToPosition(890);
-
-        int drivePosition = 500;
-        driveToPosition(drivePosition);
-
-        raiseArm(-145);
-
         // Step 1:  Drive forward for 3 seconds
-        /*arm.setPower(0.3);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 1.0)) {
+
+        leftTop.setPower(0.4);
+        leftBottom.setPower(0.4);
+        rightTop.setPower(0.4);
+        rightBottom.setPower(0.4);
+        while (opModeIsActive() && (runtime.seconds() < 1.25)) {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
@@ -128,113 +110,26 @@ public class BlueWarehouseForward extends LinearOpMode {
         strafeRight(0.3);
 
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 4.0)) {
+        while (opModeIsActive() && (runtime.seconds() < 1.0)) {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
 
         // Step 2:  Stop
         strafeRight(0); //Stops motors
-        arm.setPower(0);
 
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
-        sleep(1000);*/
-    }
-
-
-    private void driveToPosition(int drivePosition) {
-        int distance = leftBottom.getCurrentPosition() + drivePosition;
-        leftBottom.setTargetPosition(distance);
-        leftTop.setTargetPosition(distance);
-        rightBottom.setTargetPosition(distance);
-        rightTop.setTargetPosition(distance);
-
-        leftBottom.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftTop.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightBottom.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightTop.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        drive(0.5, 0.5);
-
-        while (leftBottom.isBusy()) {
-            // do nothing
-//            telemetry.addData("Arm position", arm.getCurrentPosition());    //
-//            telemetry.update();
-
-        }
-        // 6. Turn off the motor
-        drive(0, 0);
-    }
-
-    private void strafeToPosition(int strafePosition) {
-        leftTop.setTargetPosition(leftTop.getCurrentPosition() - strafePosition);
-        leftBottom.setTargetPosition(leftBottom.getCurrentPosition() + strafePosition);
-        rightTop.setTargetPosition(rightTop.getCurrentPosition() + strafePosition);
-        rightBottom.setTargetPosition(rightBottom.getCurrentPosition() - strafePosition);
-
-        leftBottom.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftTop.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightBottom.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightTop.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        drive(0.5, 0.5);
-
-        while (leftBottom.isBusy()) {
-            // do nothing
-        }
-
-        // 6. Turn off the motor
-        drive(0, 0);
-    }
-
-    private void left(double power) {
-        try {
-            leftTop.setPower(power);
-            leftBottom.setPower(power);
-        } catch (Exception ex) {
-        }
-    }
-
-    private void right(double power) {
-        try {
-            rightTop.setPower(power);
-            rightBottom.setPower(power);
-        } catch (Exception ex) {
-        }
-    }
-
-    public void drive(double left, double right) {
-        left(left);
-        right(right);
-    }
-
-
-    private void raiseArm(int position) {
-//        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //       arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        telemetry.addData("Distance", position);    //
-        telemetry.addData("Starting Arm position", arm.getCurrentPosition());    //
-        int armPosition = arm.getCurrentPosition() + position;
-        telemetry.addData("New Arm position", armPosition);    //
-
-        arm.setTargetPosition(armPosition);
-
-
-        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        telemetry.addData("Arm position", arm.getCurrentPosition());    //
-//        telemetry.update();
-        arm.setPower(0.5);
-        while (arm.isBusy()) {
-            // do nothing
-        }
-        telemetry.addData("Actual Arm position", arm.getCurrentPosition());    //
-//        arm.setPower(0);
-        sleep(2000);
-        telemetry.addData("Fallen Arm position", arm.getCurrentPosition());    //
-        telemetry.update();
         sleep(1000);
     }
+
+    public void strafeRight(double speed) {
+        leftTop.setPower(speed);
+        leftBottom.setPower(-speed);
+        rightTop.setPower(-speed);
+        rightBottom.setPower(speed);
+    }
+
+
 }

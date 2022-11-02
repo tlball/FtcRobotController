@@ -27,13 +27,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.oldcode;
+package org.firstinspires.ftc.teamcode.ftc_2021_2022.oldcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
  * This file illustrates the concept of driving a path based on time.
@@ -56,9 +58,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Red20SecAuto", group="Autonomous")
+@Autonomous(name="RedWarehouse", group="Autonomous")
 @Disabled
-public class Red20SecAuto extends LinearOpMode {
+public class RedWarehouse extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -94,14 +96,13 @@ public class Red20SecAuto extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        sleep(20000);
 
         // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
 
         // Step 1:  Drive forward for 3 seconds
         arm.setPower(0.3);
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 1.0)) {
+        while (opModeIsActive() && (runtime.seconds() < 1.5)) {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
@@ -109,30 +110,35 @@ public class Red20SecAuto extends LinearOpMode {
         strafeRight(0.3);
 
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 4.0)) {
-            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
+        while (opModeIsActive() && (runtime.seconds() < 2.5)) {
+//            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+//            telemetry.update();
         }
 
         // Step 2:  Stop
         strafeRight(0); //Stops motors
         arm.setPower(0);
 
-
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
+//        telemetry.addData("Path", "Complete");
+//        telemetry.update();
         sleep(1000);
     }
 
     public void strafeRight(double speed) {
-        double rb_speed = 1/speed;
-        /*telemetry.addData("Strafe speed", speed);
-        telemetry.addData("rb_speed", rb_speed);*/
+
+        double rb_speed_var = 0;
+        if (speed > 0) {
+            rb_speed_var = 1 / speed;
+        }
+        double rb_speed = speed * rb_speed_var;telemetry.addData("Strafe speed", speed);
+        telemetry.addData("rb_speed_var", rb_speed_var);
+        telemetry.addData("rb_speed", rb_speed);
 
         leftTop.setPower(speed);
         leftBottom.setPower(-speed);
         rightTop.setPower(-speed);
-        rightBottom.setPower(speed * rb_speed);
+        rightBottom.setPower(rb_speed);
     }
+
 
 }

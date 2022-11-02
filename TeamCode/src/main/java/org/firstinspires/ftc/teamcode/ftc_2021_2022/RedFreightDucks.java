@@ -27,11 +27,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.ftc_2021_2022;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -40,26 +40,26 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * This file illustrates the concept of driving a path based on time.
  * It uses the common Pushbot hardware class to define the drive on the robot.
  * The code is structured as a LinearOpMode
- *
+ * <p>
  * The code assumes that you do NOT have encoders on the wheels,
- *   otherwise you would use: PushbotAutoDriveByEncoder;
- *
- *   The desired path in this example is:
- *   - Drive forward for 3 seconds
- *   - Spin right for 1.3 seconds
- *   - Drive Backwards for 1 Second
- *   - Stop and close the claw.
- *
- *  The code is written in a simple form with no optimizations.
- *  However, there are several ways that this type of sequence could be streamlined,
- *
+ * otherwise you would use: PushbotAutoDriveByEncoder;
+ * <p>
+ * The desired path in this example is:
+ * - Drive forward for 3 seconds
+ * - Spin right for 1.3 seconds
+ * - Drive Backwards for 1 Second
+ * - Stop and close the claw.
+ * <p>
+ * The code is written in a simple form with no optimizations.
+ * However, there are several ways that this type of sequence could be streamlined,
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Red Warehouse", group="Autonomous")
+@Autonomous(name = "Red Freight Duck Wheel", group = "Autonomous")
 //@Disabled
-public class RedWarehouse extends LinearOpMode {
+public class RedFreightDucks extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -67,8 +67,10 @@ public class RedWarehouse extends LinearOpMode {
     private DcMotor leftBottom;
     private DcMotor rightTop;
     private DcMotor rightBottom;
+    private CRServo duckWheel1;
     private DcMotor arm;
     private Servo claw;
+
 
     public void setup() {
 
@@ -78,6 +80,7 @@ public class RedWarehouse extends LinearOpMode {
         rightBottom = hardwareMap.get(DcMotor.class, "rightBottom");
         arm = hardwareMap.get(DcMotor.class, "arm");
         claw = hardwareMap.get(Servo.class, "claw");
+        duckWheel1 = hardwareMap.get(CRServo.class, "duckWheel1");
 
         leftTop.setDirection(DcMotor.Direction.REVERSE);
         leftBottom.setDirection(DcMotor.Direction.REVERSE);
@@ -89,6 +92,8 @@ public class RedWarehouse extends LinearOpMode {
         leftBottom.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightTop.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBottom.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+//        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Initiated");    //
@@ -104,73 +109,88 @@ public class RedWarehouse extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+        // Make sure good grip on block
         claw.setPosition(1.0);
         sleep(1000);
 
-        // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
+        //ducks(1);
 
+        // Raise arm to top level
         raiseArm(150);
 
-        strafeToPosition(890);
+        // Drive to alliance hub
+        int drivePosition = 860;
+        driveToPosition(drivePosition);
+        sleep(500);
 
-        raiseArm(-145);
+        // Release cube
+        claw.setPosition(0);
+        sleep(500);
 
-        // Step 1:  Drive forward for 3 seconds
-        /*arm.setPower(0.3);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 1.0)) {
-            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
+        // Raise arm to not get stuck
+        raiseArm(50);
 
-        strafeRight(0.3);
+        // Backup before driving away
+        driveToPosition(-125);
 
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 4.0)) {
-            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-
-        // Step 2:  Stop
-        strafeRight(0); //Stops motors
-        arm.setPower(0);
+        // Drive to wall by storage
+        strafeToPosition(1650);
+        sleep(500);
 
 
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
-        sleep(1000);*/
+        driveToPosition(-300);
+//        sleep(5000);
+
+        double duckSpeed = 1;
+        ducks(duckSpeed);
+//        sleep(5000);
+
+        driveToPosition(300);
+
     }
-
 
     private void driveToPosition(int drivePosition) {
         int distance = leftBottom.getCurrentPosition() + drivePosition;
+        telemetry.addData("distance", drivePosition);
+        telemetry.addData("leftBottom Current position", leftBottom.getCurrentPosition());
+        telemetry.addData("leftBottom New position", distance);
         leftBottom.setTargetPosition(distance);
         leftTop.setTargetPosition(distance);
         rightBottom.setTargetPosition(distance);
         rightTop.setTargetPosition(distance);
+        telemetry.update();
+
+        sleep(2000);
+
 
         leftBottom.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftTop.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBottom.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightTop.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        telemetry.update();
         drive(0.5, 0.5);
 
         while (leftBottom.isBusy()) {
+            telemetry.addData("leftBottom Actual position", leftBottom.getCurrentPosition());
+            telemetry.update();
+
             // do nothing
 //            telemetry.addData("Arm position", arm.getCurrentPosition());    //
 //            telemetry.update();
 
         }
+        sleep(2000);
+
         // 6. Turn off the motor
         drive(0, 0);
     }
 
     private void strafeToPosition(int strafePosition) {
-        leftTop.setTargetPosition(leftTop.getCurrentPosition() + strafePosition);
-        leftBottom.setTargetPosition(leftBottom.getCurrentPosition() - strafePosition);
-        rightTop.setTargetPosition(rightTop.getCurrentPosition() - strafePosition);
-        rightBottom.setTargetPosition(rightBottom.getCurrentPosition() + strafePosition);
+        leftTop.setTargetPosition(leftTop.getCurrentPosition() - strafePosition);
+        leftBottom.setTargetPosition(leftBottom.getCurrentPosition() + strafePosition);
+        rightTop.setTargetPosition(rightTop.getCurrentPosition() + strafePosition);
+        rightBottom.setTargetPosition(rightBottom.getCurrentPosition() - strafePosition);
 
         leftBottom.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftTop.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -189,16 +209,16 @@ public class RedWarehouse extends LinearOpMode {
 
     private void left(double power) {
         try {
-            leftTop.setPower(power);
             leftBottom.setPower(power);
+            leftTop.setPower(power);
         } catch (Exception ex) {
         }
     }
 
     private void right(double power) {
         try {
-            rightTop.setPower(power);
             rightBottom.setPower(power);
+            rightTop.setPower(power);
         } catch (Exception ex) {
         }
     }
@@ -236,5 +256,61 @@ public class RedWarehouse extends LinearOpMode {
         sleep(1000);
     }
 
+    private void ducks(double duckSpeed) {
+        duckWheel1.setPower(duckSpeed);
+    }
 
+    /*leftTop.setPower(0.4);
+    leftBottom.setPower(0.4);
+    rightTop.setPower(0.4);
+    rightBottom.setPower(0.4);
+    while (opModeIsActive() && (runtime.seconds() < 1.25)) {
+        telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+        telemetry.update();
+    }
+
+    strafeRight(0.3);
+
+    runtime.reset();
+    while (opModeIsActive() && (runtime.seconds() < 1.0)) {
+        telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+        telemetry.update();
+    }
+
+    // Step 2:  Stop
+    strafeRight(0); //Stops motors
+*/
+
+    /*telemetry.addData("Path", "Complete");
+    telemetry.update();
+    sleep(1000);*/
+
+/*
+    public void moveLeft(double speed) {
+        telemetry.addData("moveLeft speed", speed);
+
+        double rb_speed_var = 1;
+        if (speed < 0) {
+            rb_speed_var = -1.0 / speed;
+        }
+        double rb_speed = speed * rb_speed_var;
+        telemetry.addData("Strafe speed", speed);
+        telemetry.addData("rb_speed_var", rb_speed_var);
+        telemetry.addData("rb_speed", rb_speed);
+
+        leftTop.setPower(-speed);
+        leftBottom.setPower(speed);
+        rightTop.setPower(speed);
+        rightBottom.setPower(-rb_speed);
+
+        telemetry.addData("LT Speed", leftTop.getPower());
+        telemetry.addData("LB Speed", leftBottom.getPower());
+        telemetry.addData("RT Speed", rightTop.getPower());
+        telemetry.addData("RB Speed", rightBottom.getPower());
+    }
+
+    public void moveRight(double speed) {
+        telemetry.addData("moveRight speed", speed);
+        moveLeft(-speed);
+    }*/
 }

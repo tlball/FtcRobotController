@@ -27,10 +27,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.ftc_2021_2022;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -56,9 +57,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name = "Red Freight", group = "Autonomous")
+@Autonomous(name = "Blue Freight", group = "Autonomous")
 //@Disabled
-public class RedFreight extends LinearOpMode {
+public class BlueFreight extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -140,7 +141,6 @@ public class RedFreight extends LinearOpMode {
 
         strafeToPosition(1650);
 
-        driveToPosition(100);
     }
 
     private void driveToPosition(int drivePosition) {
@@ -165,14 +165,14 @@ public class RedFreight extends LinearOpMode {
         }
 
         // 6. Turn off the motor
-        //drive(0, 0);
+        drive(0, 0);
     }
 
     private void strafeToPosition(int strafePosition) {
-        leftTop.setTargetPosition(leftTop.getCurrentPosition() - strafePosition);
-        leftBottom.setTargetPosition(leftBottom.getCurrentPosition() + strafePosition);
-        rightTop.setTargetPosition(rightTop.getCurrentPosition() + strafePosition);
-        rightBottom.setTargetPosition(rightBottom.getCurrentPosition() - strafePosition);
+        leftTop.setTargetPosition(leftTop.getCurrentPosition() + strafePosition);
+        leftBottom.setTargetPosition(leftBottom.getCurrentPosition() - strafePosition);
+        rightTop.setTargetPosition(rightTop.getCurrentPosition() - strafePosition);
+        rightBottom.setTargetPosition(rightBottom.getCurrentPosition() + strafePosition);
 
         leftBottom.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftTop.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -186,7 +186,7 @@ public class RedFreight extends LinearOpMode {
         }
 
         // 6. Turn off the motor
-        //drive(0, 0);
+        drive(0, 0);
     }
 
     private void left(double power) {
