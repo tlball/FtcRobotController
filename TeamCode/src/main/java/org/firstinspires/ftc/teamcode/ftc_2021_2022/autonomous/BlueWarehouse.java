@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.ftc_2021_2022;
+package org.firstinspires.ftc.teamcode.ftc_2021_2022.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -56,9 +56,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="BlueWarehouseFoward", group="Autonomous")
+@Autonomous(name="BlueWarehouse", group="Autonomous")
 //@Disabled
-public class BlueWarehouseForward extends LinearOpMode {
+public class BlueWarehouse extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -111,9 +111,6 @@ public class BlueWarehouseForward extends LinearOpMode {
         raiseArm(150);
 
         strafeToPosition(890);
-
-        int drivePosition = 500;
-        driveToPosition(drivePosition);
 
         raiseArm(-145);
 
@@ -237,4 +234,6 @@ public class BlueWarehouseForward extends LinearOpMode {
         telemetry.update();
         sleep(1000);
     }
+
+
 }

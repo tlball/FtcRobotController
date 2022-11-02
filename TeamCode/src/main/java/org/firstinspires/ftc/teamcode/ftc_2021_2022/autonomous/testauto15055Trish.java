@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ftc_2021_2022;
+package org.firstinspires.ftc.teamcode.ftc_2021_2022.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ftc_2021_2022;
+package org.firstinspires.ftc.teamcode.ftc_2021_2022.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;

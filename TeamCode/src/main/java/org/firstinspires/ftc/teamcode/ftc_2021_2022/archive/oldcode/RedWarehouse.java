@@ -27,13 +27,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.ftc_2021_2022.oldcode;
+package org.firstinspires.ftc.teamcode.ftc_2021_2022.archive.oldcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
  * This file illustrates the concept of driving a path based on time.
@@ -56,9 +58,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="RedWarehouseFoward", group="Autonomous")
+@Autonomous(name="RedWarehouse", group="Autonomous")
 @Disabled
-public class RedWarehouseForward extends LinearOpMode {
+public class RedWarehouse extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -109,36 +111,21 @@ public class RedWarehouseForward extends LinearOpMode {
 
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 2.5)) {
-            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
+//            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+//            telemetry.update();
         }
 
         // Step 2:  Stop
         strafeRight(0); //Stops motors
-        //forward (0.1);
-        leftTop.setPower(0.2);
-        leftBottom.setPower(0.2);
-        rightTop.setPower(0.2);
-        rightBottom.setPower(0.2);
+        arm.setPower(0);
 
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 1.0)) {
-            telemetry.addData("Path", "Leg 2: %3.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-
-        //forward(0);
-        leftTop.setPower(0);
-        leftBottom.setPower(0);
-        rightTop.setPower(0);
-        rightBottom.setPower(0);
-
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
+//        telemetry.addData("Path", "Complete");
+//        telemetry.update();
         sleep(1000);
     }
 
     public void strafeRight(double speed) {
+
         double rb_speed_var = 0;
         if (speed > 0) {
             rb_speed_var = 1 / speed;
@@ -151,13 +138,6 @@ public class RedWarehouseForward extends LinearOpMode {
         leftBottom.setPower(-speed);
         rightTop.setPower(-speed);
         rightBottom.setPower(rb_speed);
-    }
-
-    public void forward(double speed) {
-        leftTop.setPower(speed);
-        leftBottom.setPower(speed);
-        rightTop.setPower(speed);
-        rightBottom.setPower(speed);
     }
 
 

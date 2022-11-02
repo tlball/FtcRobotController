@@ -27,99 +27,129 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.ftc_2021_2022.trish_sandbox;
+package org.firstinspires.ftc.teamcode.ftc_2021_2022.autonomous;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
 /**
- * This is NOT an opmode.
- *
- * This class can be used to define all the specific hardware for a single robot.
- * In this case that robot is a Pushbot.
- * See PushbotTeleopTank_Iterative and others classes starting with "Pushbot" for usage examples.
- *
- * This hardware class assumes the following device names have been configured on the robot:
- * Note:  All names are lower case and some have single spaces between words.
- *
- * Motor channel:  Left  drive motor:        "left_drive"
- * Motor channel:  Right drive motor:        "right_drive"
- * Motor channel:  Manipulator drive motor:  "left_arm"
- * Servo channel:  Servo to open left claw:  "left_hand"
- * Servo channel:  Servo to open right claw: "right_hand"
+ * This file illustrates the concept of driving a path based on time.
+ * It uses the common Pushbot hardware class to define the drive on the robot.
+ * The code is structured as a LinearOpMode
+ * <p>
+ * The code assumes that you do NOT have encoders on the wheels,
+ * otherwise you would use: PushbotAutoDriveByEncoder;
+ * <p>
+ * The desired path in this example is:
+ * - Drive forward for 3 seconds
+ * - Spin right for 1.3 seconds
+ * - Drive Backwards for 1 Second
+ * - Stop and close the claw.
+ * <p>
+ * The code is written in a simple form with no optimizations.
+ * However, there are several ways that this type of sequence could be streamlined,
+ * <p>
+ * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-public class RobotConfigTrish
-{
-    /* Public OpMode members. */
-    public DcMotor leftTop = null;
-    public DcMotor leftBottom = null;
-    public DcMotor rightTop = null;
-    public DcMotor rightBottom = null;
-    public CRServo duckWheelRight = null;
-    public CRServo duckWheelLeft = null;
-    public DcMotor arm = null;
-    public Servo claw = null;
 
-    public static final double CLAW_OPEN    =  0 ;
-    public static final double CLAW_CLOSED  =  1 ;
-    public static final double CLAW_MID     =  0.5 ;
+@Autonomous(name = "Red Freight Duck Wheel", group = "Autonomous")
+//@Disabled
+public class RedFreightDucks extends LinearOpMode {
 
-    //    public static final double ARM_UP_POWER    =  0.45 ;
-    //    public static final double ARM_DOWN_POWER  = -0.45 ;
+    /* Declare OpMode members. */
+    private ElapsedTime runtime = new ElapsedTime();
+    private DcMotor leftTop;
+    private DcMotor leftBottom;
+    private DcMotor rightTop;
+    private DcMotor rightBottom;
+    private CRServo duckWheel1;
+    private DcMotor arm;
+    private Servo claw;
 
-    /* local OpMode members. */
-    HardwareMap hardwareMap  =  null;
-    Telemetry telemetry      = null;
 
-    public ElapsedTime runtime  = new ElapsedTime();
+    public void setup() {
 
-    /* Constructor */
-    public RobotConfigTrish() {
-
-    }
-
-    /* Initialize standard Hardware interfaces */
-    public void init(HardwareMap ahwMap, Telemetry tltry) {
-        // Save reference to Hardware map
-        hardwareMap = ahwMap;
-        // Set up telemetry
-        telemetry = tltry;
-
-                // Define and Initialize Motors
         leftTop = hardwareMap.get(DcMotor.class, "leftTop");
         leftBottom = hardwareMap.get(DcMotor.class, "leftBottom");
         rightTop = hardwareMap.get(DcMotor.class, "rightTop");
         rightBottom = hardwareMap.get(DcMotor.class, "rightBottom");
         arm = hardwareMap.get(DcMotor.class, "arm");
         claw = hardwareMap.get(Servo.class, "claw");
-        duckWheelRight = hardwareMap.get(CRServo.class, "duckWheel1");
-        duckWheelLeft = hardwareMap.get(CRServo.class, "duckWheel2");
+        duckWheel1 = hardwareMap.get(CRServo.class, "duckWheel1");
 
         leftTop.setDirection(DcMotor.Direction.REVERSE);
         leftBottom.setDirection(DcMotor.Direction.REVERSE);
         rightTop.setDirection(DcMotor.Direction.FORWARD);
         rightBottom.setDirection(DcMotor.Direction.FORWARD);
 
-        // Set all motors to zero power
-        drive(0, 0);
-
-        // Reset all encoders.
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftTop.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBottom.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightTop.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBottom.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        // Initialize ALL installed servos.
-        claw.setPosition(CLAW_CLOSED);
+//        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // Send telemetry message to signify robot waiting;
+        telemetry.addData("Status", "Initiated");    //
+
+        telemetry.update();
     }
 
-    public void driveToPosition(int drivePosition) {
+    @Override
+    public void runOpMode() {
+
+        setup();
+
+        // Wait for the game to start (driver presses PLAY)
+        waitForStart();
+
+        // Make sure good grip on block
+        claw.setPosition(1.0);
+        sleep(1000);
+
+        //ducks(1);
+
+        // Raise arm to top level
+        raiseArm(150);
+
+        // Drive to alliance hub
+        int drivePosition = 860;
+        driveToPosition(drivePosition);
+        sleep(500);
+
+        // Release cube
+        claw.setPosition(0);
+        sleep(500);
+
+        // Raise arm to not get stuck
+        raiseArm(50);
+
+        // Backup before driving away
+        driveToPosition(-125);
+
+        // Drive to wall by storage
+        strafeToPosition(1650);
+        sleep(500);
+
+
+        driveToPosition(-300);
+//        sleep(5000);
+
+        double duckSpeed = 1;
+        ducks(duckSpeed);
+//        sleep(5000);
+
+        driveToPosition(300);
+
+    }
+
+    private void driveToPosition(int drivePosition) {
         int distance = leftBottom.getCurrentPosition() + drivePosition;
         telemetry.addData("distance", drivePosition);
         telemetry.addData("leftBottom Current position", leftBottom.getCurrentPosition());
@@ -130,7 +160,7 @@ public class RobotConfigTrish
         rightTop.setTargetPosition(distance);
         telemetry.update();
 
-//        sleep(2000);
+        sleep(2000);
 
 
         leftBottom.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -150,13 +180,13 @@ public class RobotConfigTrish
 //            telemetry.update();
 
         }
-//        sleep(2000);
+        sleep(2000);
 
         // 6. Turn off the motor
         drive(0, 0);
     }
 
-    public void strafeToPosition(int strafePosition) {
+    private void strafeToPosition(int strafePosition) {
         leftTop.setTargetPosition(leftTop.getCurrentPosition() - strafePosition);
         leftBottom.setTargetPosition(leftBottom.getCurrentPosition() + strafePosition);
         rightTop.setTargetPosition(rightTop.getCurrentPosition() + strafePosition);
@@ -177,7 +207,7 @@ public class RobotConfigTrish
         drive(0, 0);
     }
 
-    public void left(double power) {
+    private void left(double power) {
         try {
             leftBottom.setPower(power);
             leftTop.setPower(power);
@@ -185,7 +215,7 @@ public class RobotConfigTrish
         }
     }
 
-    public void right(double power) {
+    private void right(double power) {
         try {
             rightBottom.setPower(power);
             rightTop.setPower(power);
@@ -199,47 +229,17 @@ public class RobotConfigTrish
     }
 
 
-    public void strafeLeft(double speed) {
-        telemetry.addData("Strafe speed", speed);
-
-
-        leftTop.setPower(-speed * 0.75);
-        leftBottom.setPower(speed * 0.75);
-        rightTop.setPower(speed * 0.75);
-        rightBottom.setPower(-speed * 0.75);
-    }
-
-    public void strafeRight(double speed) {
-        telemetry.addData("moveRight speed", speed);
-
-
-        strafeLeft(-speed);
-    }
-
-//    public void controlArm(double speed) {
-//        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        arm.setPower(speed);
-//    }
-
-    public void raiseArmToPosition(int position) {
-        if (position == 0) {
-            return; // do nothing
-        }
-
+    private void raiseArm(int position) {
 //        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //       arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         telemetry.addData("Distance", position);    //
         telemetry.addData("Starting Arm position", arm.getCurrentPosition());    //
-
         int armPosition = arm.getCurrentPosition() + position;
         telemetry.addData("New Arm position", armPosition);    //
 
-        if (armPosition < 0) {
-            return; // do nothing
-        }
-
         arm.setTargetPosition(armPosition);
+
 
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //        telemetry.addData("Arm position", arm.getCurrentPosition());    //
@@ -248,22 +248,69 @@ public class RobotConfigTrish
         while (arm.isBusy()) {
             // do nothing
         }
+        telemetry.addData("Actual Arm position", arm.getCurrentPosition());    //
+//        arm.setPower(0);
+        sleep(2000);
+        telemetry.addData("Fallen Arm position", arm.getCurrentPosition());    //
+        telemetry.update();
+        sleep(1000);
     }
 
-    public void ducks(double duckSpeed) {
-        duckWheelRight.setPower(duckSpeed);
+    private void ducks(double duckSpeed) {
+        duckWheel1.setPower(duckSpeed);
     }
 
-    public void setClawOpen() {
-      claw.setPosition(CLAW_OPEN);
+    /*leftTop.setPower(0.4);
+    leftBottom.setPower(0.4);
+    rightTop.setPower(0.4);
+    rightBottom.setPower(0.4);
+    while (opModeIsActive() && (runtime.seconds() < 1.25)) {
+        telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+        telemetry.update();
     }
 
-    public void setClawClosed() {
-        claw.setPosition(CLAW_CLOSED);
+    strafeRight(0.3);
+
+    runtime.reset();
+    while (opModeIsActive() && (runtime.seconds() < 1.0)) {
+        telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+        telemetry.update();
     }
 
-    public void setClawMid() {
-        claw.setPosition(CLAW_MID);
-    }
- }
+    // Step 2:  Stop
+    strafeRight(0); //Stops motors
+*/
 
+    /*telemetry.addData("Path", "Complete");
+    telemetry.update();
+    sleep(1000);*/
+
+/*
+    public void moveLeft(double speed) {
+        telemetry.addData("moveLeft speed", speed);
+
+        double rb_speed_var = 1;
+        if (speed < 0) {
+            rb_speed_var = -1.0 / speed;
+        }
+        double rb_speed = speed * rb_speed_var;
+        telemetry.addData("Strafe speed", speed);
+        telemetry.addData("rb_speed_var", rb_speed_var);
+        telemetry.addData("rb_speed", rb_speed);
+
+        leftTop.setPower(-speed);
+        leftBottom.setPower(speed);
+        rightTop.setPower(speed);
+        rightBottom.setPower(-rb_speed);
+
+        telemetry.addData("LT Speed", leftTop.getPower());
+        telemetry.addData("LB Speed", leftBottom.getPower());
+        telemetry.addData("RT Speed", rightTop.getPower());
+        telemetry.addData("RB Speed", rightBottom.getPower());
+    }
+
+    public void moveRight(double speed) {
+        telemetry.addData("moveRight speed", speed);
+        moveLeft(-speed);
+    }*/
+}
