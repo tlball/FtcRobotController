@@ -21,12 +21,19 @@ public class FieldCentricDriveChatGPT extends LinearOpMode {
     private IMU imu;
 
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
         // Initialize hardware
         frontLeftDrive  = hardwareMap.dcMotor.get("frontLeftDrive");
         frontRightDrive = hardwareMap.dcMotor.get("frontRightDrive");
         backLeftDrive   = hardwareMap.dcMotor.get("backLeftDrive");
         backRightDrive  = hardwareMap.dcMotor.get("backRightDrive");
+
+        // Reverse the right side motors. This may be wrong for your setup.
+        // If your robot moves backwards when commanded to go forwards,
+        // reverse the left side instead.
+        // See the note about this earlier on this page.
+        frontRightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Retrieve the IMU from the hardware map
         imu = hardwareMap.get(IMU.class, "imu");
@@ -39,10 +46,19 @@ public class FieldCentricDriveChatGPT extends LinearOpMode {
 
         waitForStart();
 
+        if (isStopRequested()) return;
+
         while (opModeIsActive()) {
             double drive = -gamepad1.left_stick_y;  // Reverse this to change the direction of forward movement
             double strafe = gamepad1.left_stick_x;
             double rotate = gamepad1.right_stick_x;
+
+            // This button choice was made so that it is hard to hit on accident,
+            // it can be freely changed based on preference.
+            // The equivalent button is start on Xbox-style controllers.
+            if (gamepad1.options) {
+                imu.resetYaw();
+            }
 
             // Get the current robot orientation
             Orientation angles   = imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
