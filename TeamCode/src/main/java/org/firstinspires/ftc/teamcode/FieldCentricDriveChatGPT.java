@@ -1,16 +1,17 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.Range;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-
-
+// @Disabled
 @TeleOp(name="FieldCentricDrive", group="Sample")
 public class FieldCentricDriveChatGPT extends LinearOpMode {
 
@@ -39,7 +40,8 @@ public class FieldCentricDriveChatGPT extends LinearOpMode {
             double rotate = gamepad1.right_stick_x;
 
             // Get the current robot orientation
-            Orientation angles = imu.getAngularOrientation(AxesOrder.ZYX, AngleUnit.DEGREES);
+            Orientation angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
             double robotAngle = Math.toRadians(angles.firstAngle);  // Convert to radians
 
             // Field-centric calculations
