@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -10,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 // @Disabled
 @TeleOp(name="FieldCentricDrive", group="Sample")
-public class FieldCentricDriveChatGPT extends LinearOpMode {
+public class FieldCentricDriveAttempt extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         // Declare our motors
