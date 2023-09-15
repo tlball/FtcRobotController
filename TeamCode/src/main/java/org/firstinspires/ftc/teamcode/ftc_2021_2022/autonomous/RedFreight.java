@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.ftc_2021_2022.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -57,7 +58,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous(name = "Red Freight", group = "Autonomous")
-//@Disabled
+@Disabled
 public class RedFreight extends LinearOpMode {
 
     /* Declare OpMode members. */

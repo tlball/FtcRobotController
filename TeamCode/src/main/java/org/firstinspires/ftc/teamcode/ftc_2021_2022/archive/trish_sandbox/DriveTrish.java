@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.ftc_2021_2022.archive.trish_sandbox;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -8,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
 @TeleOp(name = "Trish - Arcade Drive", group = "Iterative Opmode")
-//@Disabled
+@Disabled
 public class DriveTrish extends OpMode {
     // Declare OpMode members.
     RobotConfigTrish robot   = new RobotConfigTrish();   // Use a Pushbot's hardware

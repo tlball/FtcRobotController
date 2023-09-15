@@ -58,7 +58,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous(name="Red Warehouse", group="Autonomous")
-//@Disabled
+@Disabled
 public class RedWarehouse extends LinearOpMode {
 
     /* Declare OpMode members. */

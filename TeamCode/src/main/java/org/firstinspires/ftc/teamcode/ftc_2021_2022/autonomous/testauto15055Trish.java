@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.ftc_2021_2022.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -10,7 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 
-//@Disabled
+@Disabled
 @Autonomous(name = "testauto15055-Trish", group = "Autonomus")
 public class testauto15055Trish extends OpMode {
     int d = 0;
